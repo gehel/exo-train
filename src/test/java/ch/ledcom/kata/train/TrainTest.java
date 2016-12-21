@@ -3,6 +3,7 @@ package ch.ledcom.kata.train;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class TrainTest {
     @Test
@@ -42,7 +43,11 @@ public class TrainTest {
         assertEquals("<HHHH::|^^^^|::|^^^^|::|____|", train.print());
         train.fill();
         assertEquals("<HHHH::|^^^^|::|^^^^|::|^^^^|", train.print());
-        assertFalse(train.fill());
+        try {
+            train.fill();
+            fail("Filling a train that is already full should throw exception");
+        } catch (IllegalStateException expected) {
+        }
     }
 
     @Test
@@ -53,5 +58,10 @@ public class TrainTest {
         assertEquals("<HHHH::|OOOO|::|^^^^|::|OOOO|::|____|", train.print());
         train.fill();
         assertEquals("<HHHH::|OOOO|::|^^^^|::|OOOO|::|^^^^|", train.print());
-        assertFalse(train.fill());
-    }}
+        try {
+            train.fill();
+            fail("Filling a train that is already full should throw exception");
+        } catch (IllegalStateException expected) {
+        }
+    }
+}
