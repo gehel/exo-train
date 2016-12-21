@@ -1,13 +1,10 @@
 import unittest
 
-
-class Train(object):
-    def __init__(self, config):
-        self._str = config
+from exo_train.train import Train
 
 
 class TrainTest(unittest.TestCase):
-    
+
     def test_passenger_train(self):
         train = Train("HPP")
         self.assertEqual("<HHHH::|OOOO|::|OOOO|", str(train))
@@ -36,7 +33,8 @@ class TrainTest(unittest.TestCase):
         self.assertEquals("<HHHH::|^^^^|::|^^^^|::|____|", str(train))
         train.fill()
         self.assertEquals("<HHHH::|^^^^|::|^^^^|::|^^^^|", str(train))
-        self.assertFalse(train.fill())
+        with self.assertRaises(RuntimeError):
+            train.fill()
 
     def test_mixed_train(self):
         train = Train("HPCPC")
@@ -46,6 +44,3 @@ class TrainTest(unittest.TestCase):
         train.fill()
         self.assertEquals("<HHHH::|OOOO|::|^^^^|::|OOOO|::|^^^^|", str(train))
         self.assertFalse(train.fill())
-
-if __name__ == '__main__':
-    unittest.main()
