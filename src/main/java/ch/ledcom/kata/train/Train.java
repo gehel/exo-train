@@ -1,47 +1,42 @@
 package ch.ledcom.kata.train;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.LinkedList;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
 
 public class Train {
 
-    private final Depot depot = new Depot();
-    private final List<Wagon> wagons;
+    private final LinkedList<Wagon> wagons;
 
     public Train(String representation) {
-        wagons = representation.chars().mapToObj(depot).collect(Collectors.toList());
+        wagons = representation.chars()
+                .mapToObj(Depot.build())
+                .collect(toCollection(LinkedList::new));
     }
 
     public String print() {
-        List<String> printedWagons = new ArrayList<>();
-        boolean isFirst = true;
-        for (Wagon w: wagons) {
-            printedWagons.add(w.print(isFirst));
-            isFirst = false;
-        }
-        return printedWagons.stream().collect(Collectors.joining("::"));
+        final Wagon firstWagon = wagons.isEmpty() ? null : wagons.getFirst();
+        return wagons.stream()
+                .map(w -> w.print(firstWagon == w))
+                .collect(joining("::"));
     }
 
     public void detachEnd() {
-        wagons.remove(wagons.size() - 1);
+        wagons.removeLast();
     }
 
     public void detachHead() {
-        wagons.remove(0);
+        wagons.removeFirst();
     }
 
     public void fill() {
-        for (Wagon w : wagons) {
-            if (w.getClass().isAssignableFrom(CargoCar.class)) {
-                try {
-                    ((CargoCar) w).load();
-                    return;
-                } catch (IllegalStateException ignore) {
-                    // move to next wagon
-                }
-            }
-        }
-        throw new IllegalStateException("Train already full");
+        wagons.stream()
+                .filter(CargoCar.class::isInstance)
+                .map(w -> (CargoCar) w)
+                .filter(CargoCar::isEmpty)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Train already full"))
+                .load();
     }
 }
