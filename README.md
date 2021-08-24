@@ -39,9 +39,9 @@ To list of the environments available run
 ```
 $ tox -l
 py27-flake8
-py34-flake8
+py3-flake8
 py27-tests
-py34-tests
+py3-tests
 ```
 
 To run a specific one:
