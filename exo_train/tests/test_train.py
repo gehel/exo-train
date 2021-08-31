@@ -43,4 +43,5 @@ class TrainTest(unittest.TestCase):
         self.assertEquals("<HHHH::|OOOO|::|^^^^|::|OOOO|::|____|", str(train))
         train.fill()
         self.assertEquals("<HHHH::|OOOO|::|^^^^|::|OOOO|::|^^^^|", str(train))
-        self.assertFalse(train.fill())
+        with self.assertRaises(RuntimeError):
+            train.fill()
